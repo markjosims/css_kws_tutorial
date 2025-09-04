@@ -210,4 +210,7 @@ __marimo__/
 ~$*
 
 # Mac system files
-.DS_Storetmp.dot
+.DS_Store
+
+# Temporary files
+tmp.dot
