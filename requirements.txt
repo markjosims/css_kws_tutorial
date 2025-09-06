@@ -1,10 +1,9 @@
 pandas
 tqdm
-wordfreq
 pympi-ling
-unidecode
-openpyxl
 pynini
 ipykernel
-pytest
 graphviz
+librosa
+scikitlearn
+pomegranate
