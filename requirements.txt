@@ -5,5 +5,5 @@ pynini
 ipykernel
 graphviz
 librosa
-scikitlearn
+scikit-learn
 pomegranate
