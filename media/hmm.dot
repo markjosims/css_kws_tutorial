@@ -1,0 +1,68 @@
+digraph HMM_Final_Layout {
+    rankdir=TB; // Top to Bottom layout
+
+    // --- Define State Nodes ---
+    node [shape=circle, style="filled", fillcolor="lightgoldenrod1"];
+    // s1 [style=invis, width=0.5]; // Adjust width to increase/decrease space
+    // s2 [style=invis, width=0.5]; // Adjust width to increase/decrease space
+    subgraph cluster_states {
+        style=invis; // Invisible cluster to group states
+        { rank = same; "Alaska"; "Cali";  "Texas"; } // Ensure states are on the same line
+    }
+
+    // --- Define Observation Nodes for each State ---
+    node [shape=box, style="filled", fillcolor="lightblue"];
+    subgraph cluster_alaska_obs {
+        style=invis;
+        a_snow [label="snow"];
+        a_oil_rig [label="oil rig"];
+        a_beach [label="beach"];
+    }
+    subgraph cluster_Cali_obs {
+        style=invis;
+        c_snow [label="snow"];
+        c_oil_rig [label="oil rig"];
+        c_beach [label="beach"];
+    }
+    subgraph cluster_texas_obs {
+        style=invis;
+        t_snow [label="snow"];
+        t_oil_rig [label="oil rig"];
+        t_beach [label="beach"];
+    }
+
+    // --- State Transitions with Color-Coded Weights ---
+    // "Cali" -> "Texas" [color="red", penwidth=2.5];
+    // "Cali" -> "Cali" [color="gold", penwidth=1.5];
+    // "Alaska" -> "Alaska" [color="gold", penwidth=1.5];
+    // "Texas" -> "Cali" [color="gold", penwidth=1.5];
+    // "Texas" -> "Texas" [color="gold", penwidth=1.5];
+    // "Cali" -> "Alaska" [color="cornflowerblue", penwidth=1.0];
+    // "Alaska" -> "Cali" [color="cornflowerblue", penwidth=1.0];
+    // "Texas" -> "Alaska" [color="blue", penwidth=0.75];
+    // "Alaska" -> "Texas" [color="blue", penwidth=0.75];
+
+    // --- State Transitions with Ports to Prevent Overlap ---
+    // Arcs using "north" ports (higher)
+    "Texas" -> "Cali" [color="gold", penwidth=1.5, tailport=nw, headport=ne];
+    "Alaska" -> "Cali" [color="gold", penwidth=1.5, tailport=e, headport=w];
+    "Texas" -> "Alaska" [color="blue", penwidth=0.75, tailport=n, headport=ne];
+
+    // Arcs using "south" ports (lower)
+    "Cali" -> "Texas" [color="red", penwidth=2.5, tailport=e, headport=w];
+    "Cali" -> "Alaska" [color="cornflowerblue", penwidth=1.0, tailport=n, headport=ne];
+    "Alaska" -> "Texas" [color="blue", penwidth=0.75, tailport=n, headport=nw];
+
+    // --- Emission Probabilities to Respective Observations ---
+    "Cali" -> "c_snow" [color="gold", penwidth=1.5];
+    "Cali" -> "c_oil_rig" [color="cornflowerblue", penwidth=1.0];
+    "Cali" -> "c_beach" [color="red", penwidth=2.5];
+
+    "Alaska" -> "a_snow" [color="red", penwidth=2.5];
+    "Alaska" -> "a_oil_rig" [color="orange", penwidth=2.0];
+    "Alaska" -> "a_beach" [color="cornflowerblue", penwidth=1.0];
+
+    "Texas" -> "t_snow" [color="cornflowerblue", penwidth=1.0];
+    "Texas" -> "t_oil_rig" [color="red", penwidth=2.5];
+    "Texas" -> "t_beach" [color="blue", penwidth=0.5];
+}
