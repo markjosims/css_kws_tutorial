@@ -12,6 +12,7 @@ import os
 import pandas as pd
 from tqdm import tqdm
 from typing import *
+from praatio import textgrid
 
 tqdm.pandas()
 
@@ -30,6 +31,56 @@ LIBRIPHRASE_AUDIO = os.path.join(LIBRIPHRASE_DATA, LIBRISPEECH_SPLIT)
 # output files
 SENTENCES_CSV = os.path.join(LIBRIPHRASE_DATA, f"{LIBRISPEECH_SPLIT}_sentences.csv")
 WORDS_CSV = os.path.join(LIBRIPHRASE_DATA, f"{LIBRIPHRASE_SPLIT}_keywords.csv")
+
+def get_librispeech_path(relpath: str) -> str:
+    """
+    Arguments:
+        relpath:    String of relative path to LibriSpeech datafile
+    Returns:
+        str of absolute path to LibriSpeech datafile
+    """
+    return os.path.join(LIBRISPEECH_ROOT, relpath)
+
+def get_libriphrase_audio_path(relpath: str) -> str:
+    """
+    Arguments:
+        relpath:    String of relative path to LibriPhrase audio file
+    Returns:
+        str of absolute path to LibriPhrase audio file
+    """
+    return os.path.join(LIBRIPHRASE_AUDIO, relpath)
+
+def textgrid_to_df(textgrid_path: str) -> pd.DataFrame:
+    """
+    Arguments:
+        textgrid_path:  Absolute path to textgrid file to open.
+    Returns:
+        textgrid_df:    Pandas DataFrame containing data for textgrid.
+    """
+    textgrid_obj = textgrid.openTextgrid(textgrid_path, includeEmptyIntervals=True)
+    rows = []
+    for tier in textgrid_obj.tiers:
+        for start, end, value in tier.entries:
+            if not value:
+                continue
+            rows.append({'start': start, 'end': end, 'value': value, 'tier': tier.name})
+    textgrid_df = pd.DataFrame(rows)
+    return textgrid_df
+
+def get_librispeech_textgrid(librispeech_relpath: str) -> pd.DataFrame:
+    """
+    Arguments:
+        librispeech_relpath:    String of relative path to LibriSpeech datafile.
+                                Can have any or no file extension.
+    Returns:
+        textgrid_df:            Pandas DataFrame containing data for textgrid corresponding
+                                to LibriSpeech datafile.
+    """
+    librispeech_relpath = os.path.splitext(librispeech_relpath)[0]
+    librispeech_abspath = get_libriphrase_audio_path(librispeech_relpath)
+    textgrid_path = librispeech_abspath + '.TextGrid'
+    return textgrid_to_df(textgrid_path)
+    
 
 def get_unique_keywords(keyword_df: Optional[pd.DataFrame]=None) -> List[str]:
     if keyword_df is None:
