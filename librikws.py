@@ -56,18 +56,23 @@ def get_keyword_tokens(
 def get_random_keyword_token(
         keyword: str,
         keyword_df: Optional[pd.DataFrame]=None,
+        num_records: int=1,
     ) -> pd.Series:
     """
     Arguments:
-        keyword:    String representing keyword/phrase to query
-        keyword_df: Optional Pandas DataFrame containing keyword data.
-                    If not passed, load from $WORDS_CSV file.
+        keyword:        String representing keyword/phrase to query
+        keyword_df:     Optional Pandas DataFrame containing keyword data.
+                        If not passed, load from $WORDS_CSV file.
+        num_records:    Number of rows to sample, default 1.
     Returns:
         pandas.Series, randomly sampled row of `keyword_df`
         corresponding to the given keyword
     """
     keyword_tokens = get_keyword_tokens(keyword, keyword_df)
-    return keyword_tokens.sample().iloc[0]
+    rows = keyword_tokens.sample(num_records)
+    if num_records == 1:
+        return rows.iloc[0]
+    return rows
     
 def get_keyword_sentences(
         keyword: str,
@@ -124,6 +129,7 @@ def get_random_negative_keyphrase(
         sentence_df: Optional[pd.DataFrame]=None,
         speaker: Optional[str]=None,
         same_speaker: bool=False,
+        num_records: int=1,
     ):
     """
     Arguments:
@@ -133,6 +139,7 @@ def get_random_negative_keyphrase(
         speaker:        
         same_speaker:   bool indicating whether the keyword token should
                         originate from the same speaker as the sentence.
+        num_records:    Number of rows to sample, default 1.
 
     Returns:
         keyword_row, randomly sampled row of `keyword_df`
@@ -140,9 +147,14 @@ def get_random_negative_keyphrase(
     """
     keyword_mask = sentence_df['sentence'].str.contains(keyword)
     negative_sentences = sentence_df[~keyword_mask]
-    if speaker is not None:
+    if speaker and same_speaker:
         speaker_mask = sentence_df['speaker']==speaker
-        if same_speaker:
-            return negative_sentences[speaker_mask].sample().iloc[0]
-        return negative_sentences[~speaker_mask].sample().iloc[0]
-    return negative_sentences.sample().iloc[0]
+        rows = negative_sentences[speaker_mask].sample(num_records)
+    elif speaker:
+        rows = negative_sentences[~speaker_mask].sample(num_records)
+    else:
+        rows = negative_sentences.sample(num_records)
+        
+    if num_records==1:
+        return rows.iloc[0]
+    return rows
