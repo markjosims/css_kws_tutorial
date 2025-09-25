@@ -118,3 +118,31 @@ def get_random_keyword_sentence_pair(
     if same_speaker:
         return keyword_row, keyword_sentences[speaker_mask].sample().iloc[0]
     return keyword_row, keyword_sentences[~speaker_mask].sample().iloc[0]
+
+def get_random_negative_keyphrase(
+        keyword: str,
+        sentence_df: Optional[pd.DataFrame]=None,
+        speaker: Optional[str]=None,
+        same_speaker: bool=False,
+    ):
+    """
+    Arguments:
+        keyword:        String representing keyword/phrase to query
+        sentence_df:    Optional Pandas DataFrame containing sentence data.
+                        If not passed, load from $SENTENCES_CSV file.
+        speaker:        
+        same_speaker:   bool indicating whether the keyword token should
+                        originate from the same speaker as the sentence.
+
+    Returns:
+        keyword_row, randomly sampled row of `keyword_df`
+        that does not contain the specified keyword
+    """
+    keyword_mask = sentence_df['sentence'].str.contains(keyword)
+    negative_sentences = sentence_df[~keyword_mask]
+    if speaker is not None:
+        speaker_mask = sentence_df['speaker']==speaker
+        if same_speaker:
+            return negative_sentences[speaker_mask].sample().iloc[0]
+        return negative_sentences[~speaker_mask].sample().iloc[0]
+    return negative_sentences.sample().iloc[0]
