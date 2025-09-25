@@ -1,6 +1,6 @@
 pandas
 tqdm
-pympi-ling
+praatio
 pynini
 ipykernel
 graphviz
@@ -8,3 +8,11 @@ librosa
 scikit-learn
 pomegranate
 torch
+pydot
+tslearn
+jupyter
+matplotlib
+seaborn
+ipympl
+ipywidgets
+
