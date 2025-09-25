@@ -76,10 +76,10 @@ def get_keyword_sentences(
     """
     Arguments:
         keyword:        String representing keyword/phrase to query
-        sentences_df:   Optional Pandas DataFrame containing sentence data.
+        sentence_df:    Optional Pandas DataFrame containing sentence data.
                         If not passed, load from $SENTENCES_CSV file.
     Returns:
-        pandas.DataFrame, subset of `sentences_df` containing to the given keyword
+        pandas.DataFrame, subset of `sentence_df` containing to the given keyword
     """
     if sentence_df is None:
         sentence_df = pd.read_csv(SENTENCES_CSV)
@@ -89,7 +89,7 @@ def get_keyword_sentences(
 def get_random_keyword_sentence_pair(
         keyword: str,
         keyword_df: Optional[pd.DataFrame]=None,
-        sentences_df: Optional[pd.DataFrame]=None,
+        sentence_df: Optional[pd.DataFrame]=None,
         same_source: bool=False,
         same_speaker: bool=False,
     ) -> Tuple[pd.Series, pd.Series]:
@@ -98,7 +98,7 @@ def get_random_keyword_sentence_pair(
         keyword:        String representing keyword/phrase to query
         keyword_df:     Optional Pandas DataFrame containing keyword data.
                         If not passed, load from $WORDS_CSV file.
-        sentences_df:   Optional Pandas DataFrame containing sentence data.
+        sentence_df:    Optional Pandas DataFrame containing sentence data.
                         If not passed, load from $SENTENCES_CSV file.
         same_source:    bool indicating whether the keyword token should
                         originate from the same audio as the sentence.
@@ -110,7 +110,7 @@ def get_random_keyword_sentence_pair(
         corresponding to the given keyword
     """
     keyword_row = get_random_keyword_token(keyword, keyword_df)
-    keyword_sentences = get_keyword_sentences(keyword, sentences_df)
+    keyword_sentences = get_keyword_sentences(keyword, sentence_df)
     source_mask = keyword_sentences['file']==keyword_row['sentence_file']
     speaker_mask = keyword_sentences['speaker']==keyword_row['speaker']
     if same_source:
