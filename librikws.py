@@ -48,7 +48,7 @@ def get_libriphrase_audio_path(relpath: str) -> str:
     Returns:
         str of absolute path to LibriPhrase audio file
     """
-    return os.path.join(LIBRIPHRASE_AUDIO, relpath)
+    return os.path.join(LIBRIPHRASE_DATA, relpath)
 
 def textgrid_to_df(textgrid_path: str) -> pd.DataFrame:
     """
@@ -77,7 +77,7 @@ def get_librispeech_textgrid(librispeech_relpath: str) -> pd.DataFrame:
                                 to LibriSpeech datafile.
     """
     librispeech_relpath = os.path.splitext(librispeech_relpath)[0]
-    librispeech_abspath = get_libriphrase_audio_path(librispeech_relpath)
+    librispeech_abspath = get_librispeech_path(librispeech_relpath)
     textgrid_path = librispeech_abspath + '.TextGrid'
     return textgrid_to_df(textgrid_path)
     
