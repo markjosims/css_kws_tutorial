@@ -1,0 +1,27 @@
+name: kws
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - pandas
+  - tqdm
+  - praatio
+  - pynini
+  - ipykernel
+  - graphviz
+  - librosa
+  - scikit-learn
+  - pomegranate
+  - pytorch
+  - pydot
+  - tslearn
+  - jupyter
+  - matplotlib
+  - seaborn
+  - ipympl
+  - ipywidgets
+  - h5py
+  - nodejs
+  - pip
+  - pip:
+    - graphviz
