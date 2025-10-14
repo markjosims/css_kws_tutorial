@@ -11,7 +11,7 @@ dependencies:
   - graphviz
   - librosa
   - scikit-learn
-  - pomegranate
+  - pomegranate==1.1.2
   - pytorch
   - pydot
   - tslearn
